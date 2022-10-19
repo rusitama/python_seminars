@@ -6,7 +6,8 @@
 str = input("Введите число: ")
 sum = 0.0
 for index in str:
-    if index != ',' and index != '.':
+    #if index != ',' and index != '.':
+    if index.isdigit():
         #print(index)
         sum = sum + float(index)
 print(sum)
