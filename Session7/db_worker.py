@@ -7,37 +7,40 @@ db_file = 'phonebook.csv'
 db = []
 row_id = 0  # id последней записи
 
+
 def init_data_base():
     global row_id
     global db
     global db_file
     db.clear()
     if os.path.exists(db_file):
-        with open(db_file, 'r', newline = '') as csv_file:
+        with open(db_file, 'r', newline='') as csv_file:
             reader = csv.reader(csv_file)
             for row in reader:
-                if(row[0] != 'ID'):
+                if (row[0] != 'ID'):
                     db.append(row)
-                    if(int(row[0]) > row_id):
+                    if (int(row[0]) > row_id):
                         row_id = int(row[0])
     else:
-        open(db_file, 'w', newline = '').close()
+        open(db_file, 'w', newline='').close()
 
-def create(name = '', surname = '', number = ''):
+
+def create(name='', surname='', number=''):
     global row_id
     global db
     global db_file
     for row in db:
-        if(row[1] == name.title() and row[2] == surname.title() and row[3] == number):
+        if (row[1] == name.title() and row[2] == surname.title() and row[3] == number):
             print("Такие данные уже существуе!")
             return
     row_id += 1
     new_row = [str(row_id), name.title(), surname.title(), number]
     db.append(new_row)
     print("Данные заведены.")
-    with open(db_file, 'a', newline = '') as csv_file:
-        writer = csv.writer(csv_file, delimiter = ',', quotechar = '\'', quoting = csv.QUOTE_MINIMAL)
+    with open(db_file, 'a', newline='') as csv_file:
+        writer = csv.writer(csv_file, delimiter=',', quotechar='\'', quoting=csv.QUOTE_MINIMAL)
         writer.writerow(new_row)
+
 
 def serch(id='', name='', surname='', number=''):
     global row_id
@@ -47,11 +50,11 @@ def serch(id='', name='', surname='', number=''):
     for row in db:
         if (id != '' and row[0] != id):
             continue
-        if(name != '' and row[1] != name.title()):
+        if (name != '' and row[1] != name.title()):
             continue
-        if(surname != '' and row[2] != surname.title()):
+        if (surname != '' and row[2] != surname.title()):
             continue
-        if(number != '' and row[3] != number):
+        if (number != '' and row[3] != number):
             continue
         result.append(row)
     if len(result) == 0:
@@ -59,30 +62,32 @@ def serch(id='', name='', surname='', number=''):
     else:
         return result
 
-def update(id = '', new_name = '', new_surname = '', new_number = ''):
+
+def update(id='', new_name='', new_surname='', new_number=''):
     global row_id
     global db
     global db_file
-    if(id == ''):
+    if (id == ''):
         print('не ввели номер ID')
         return
-    with open(db_file, 'w', newline = '') as csv_file:
-        writer = csv.writer(csv_file, delimiter = ',', quotechar = '\'', quoting = csv.QUOTE_MINIMAL)
+    with open(db_file, 'w', newline='') as csv_file:
+        writer = csv.writer(csv_file, delimiter=',', quotechar='\'', quoting=csv.QUOTE_MINIMAL)
         for row in db:
-            if(row[0] == id):
-                if(new_name != ''):
+            if (row[0] == id):
+                if (new_name != ''):
                     row[1] = new_name.title()
-                if(new_surname != ''):
+                if (new_surname != ''):
                     row[2] = new_surname.title()
-                if(new_number != ''):
+                if (new_number != ''):
                     row[3] = new_number
             writer.writerow(row)
+
 
 def delete(id=''):
     global row_id
     global db
     global db_file
-    if(id == ''):
+    if (id == ''):
         print('specify id for delete')
         return
     for row in db:
@@ -94,6 +99,7 @@ def delete(id=''):
                             quotechar='\'', quoting=csv.QUOTE_MINIMAL)
         for row in db:
             writer.writerow(row)
+
 
 def export_data_to_xml():
     global db
@@ -125,8 +131,9 @@ def save_xml(filename, xml_code):
     with open(filename, 'w', encoding='UTF-8') as xml_file:
         xml_file.write(xml_prettyxml)
 
+
 def parse_xml():
-    global db
+    global db, new_row
     global db_file
     db.clear()
     tree = ET.parse('telephonebook.xml')
@@ -147,13 +154,14 @@ def parse_xml():
                 number = subelem.text
         new_row = [str(id), name.title(), surname.title(), number]
         db.append(new_row)
-    with open(db_file, 'a', newline = '') as csv_file:
-         writer = csv.writer(csv_file, delimiter = ',', quotechar = '\'', quoting = csv.QUOTE_MINIMAL)
-         writer.writerow(new_row)
+    with open(db_file, 'a', newline='') as csv_file:
+        writer = csv.writer(csv_file, delimiter=',', quotechar='\'', quoting=csv.QUOTE_MINIMAL)
+        writer.writerow(new_row)
+
 
 def export_data_to_txt():
     global db
-    f = open('phone.txt', 'w')
+    f = open('phone.txt', 'w', encoding='UTF-8')
     for row in db:
         n = 1
         for r in row:
@@ -167,8 +175,9 @@ def export_data_to_txt():
             print(r)
     f.close()
 
+
 def import_from_txt():
-    global db
+    global db, new_row
     global db_file
     db.clear()
     id = ""
